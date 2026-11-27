@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d5c63">
+<title>Coletor de Dados</title>
+<style>
+:root{--bg:#e8edf1;--card:#fff;--ink:#0e1a24;--mut:#55656f;--pri:#0d5c63;--on:#fff;--hd:#0d5c63;--hdt:#fff;--acc:#ffc400;--accT:#1b1500;--ok:#0f7a55;--bad:#c42b38;--line:#c5d0d7;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1319;--card:#15212a;--ink:#ecf2f6;--mut:#9db0bc;--pri:#3cc9bd;--on:#03201e;--hd:#13313a;--hdt:#ecf2f6;--ok:#2fb982;--bad:#e5535f;--line:#2b3c47;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1319;--card:#15212a;--ink:#ecf2f6;--mut:#9db0bc;--pri:#3cc9bd;--on:#03201e;--hd:#13313a;--hdt:#ecf2f6;--ok:#2fb982;--bad:#e5535f;--line:#2b3c47;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:14px;min-height:56px;padding:0 18px;font-weight:700}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:8px;background:var(--hd);color:var(--hdt);padding:8px 10px}
+header h1{flex:1;margin:0;font-size:20px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ib{background:transparent;color:var(--hdt);min-height:48px;min-width:48px;padding:0;font-size:26px}
+.hb{background:var(--acc);color:var(--accT);min-height:44px;padding:0 14px;font-size:15px}
+main{max-width:640px;margin:0 auto;padding:14px 14px 40px;display:flex;flex-direction:column;gap:12px}
+h2{margin:6px 0 0;font-size:18px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.big{background:var(--pri);color:var(--on);min-height:64px;font-size:20px;border-radius:18px}
+.sec{background:var(--card);color:var(--ink);border:2px solid var(--line)}
+.sm{min-height:44px;font-size:15px;padding:0 14px}
+.x{color:var(--bad)}
+.col{flex-direction:row;align-items:stretch;justify-content:space-between}
+.col .info{flex:1;display:flex;flex-direction:column;gap:2px;cursor:pointer;min-width:0}
+.col .info b{font-size:19px;overflow-wrap:anywhere}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.pill{min-height:44px;padding:0 16px;color:#fff;border-radius:999px;font-size:15px}
+.pill.ok{background:var(--ok)}.pill.bad{background:var(--bad)}
+.lnk{background:none;color:var(--mut);min-height:36px;font-size:14px;font-weight:600;text-decoration:underline;padding:0 4px}
+.mut{color:var(--mut);font-size:15px}
+.empty,.banner{text-align:center;color:var(--mut);padding:24px 8px}
+.banner{background:var(--card);border:2px dashed var(--bad);border-radius:14px;color:var(--ink);padding:14px}
+.row{display:flex;gap:8px;align-items:stretch}
+.row>input,.row>select{flex:1;min-width:0}
+input,select{background:var(--bg);border:2px solid var(--line);border-radius:14px;min-height:56px;padding:0 14px;font-size:20px;width:100%}
+input:focus{border-color:var(--pri)}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-weight:700;font-size:15px;color:var(--mut)}
+.scanbtn{background:var(--acc);color:var(--accT);min-width:64px;padding:0;display:grid;place-items:center}
+.ib2{min-width:48px;padding:0;background:var(--bg);border:2px solid var(--line)}
+.ib2:disabled{opacity:.35}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;background:var(--bg);border:2px solid var(--line);min-height:56px;font-size:16px}
+.seg button.on{background:var(--pri);color:var(--on);border-color:var(--pri)}
+.stat{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;font-size:18px}
+.it{flex-direction:row;align-items:center;gap:10px}
+.no{font-weight:800;color:var(--mut);min-width:28px}
+.vals{flex:1;display:flex;flex-wrap:wrap;gap:4px 14px;min-width:0}
+.vals span{display:flex;flex-direction:column;font-weight:700;overflow-wrap:anywhere}
+.vals i{font-style:normal;font-weight:500;font-size:12px;color:var(--mut)}
+.acts{display:flex;flex-direction:column;gap:6px}
+code{display:block;background:var(--bg);border-radius:10px;padding:10px;overflow-x:auto;font-size:15px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
+.ov.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;max-height:92%;overflow:auto}
+#scan{align-items:center;background:#000}
+#scan .sheet{background:#000;color:#fff;border-radius:0;height:100%;max-width:640px;justify-content:center}
+#reader{width:100%}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;max-width:90%;text-align:center}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" class="ov"><div class="sheet" id="sheet"></div></div>
+<div id="scan" class="ov"><div class="sheet"><div id="reader"></div><button class="big" data-act="stopscan">Cancelar leitura</button></div></div>
+<div id="toast" role="status"></div>
+<script src="html5-qrcode.min.js"></script>
+<script>
+const KEY='coletor.v1',T=[['barcode','Código de Barras'],['number','Número'],['text','Texto'],['date','Data']];
+let S={cols:[]},view={n:'home'},draft=null,editId=null,qr=null,askCb=null,tt;
+try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+try{const th=localStorage.getItem('coletor.theme');if(th)document.documentElement.dataset.theme=th}catch(e){}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+const $=s=>document.querySelector(s);
+const h=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Não foi possível salvar no aparelho.')}};
+const cur=()=>S.cols.find(c=>c.id===view.id);
+const fmtD=t=>new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const defFields=()=>[['Código de Barras','barcode'],['Quantidade','number'],['Lote','text'],['Validade','date']].map(([name,type])=>({name,type,sep:'.'}));
+const cam='<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
+function mask(v,s){const d=String(v).replace(/\D/g,'').slice(0,8);return d.slice(0,2)+(d.length>2?s+d.slice(2,4):'')+(d.length>4?s+d.slice(4):'')}
+function openM(html){$('#sheet').innerHTML=html;$('#modal').classList.add('on');const i=$('#sheet input');i&&i.focus()}
+function closeM(){$('#modal').classList.remove('on');editId=null}
+function ask(msg,label,cb){askCb=cb;openM(`<h2>${h(msg)}</h2><button class="big" style="background:var(--bad);color:#fff" data-act="yes">${label}</button><button class="sec" data-act="close">Cancelar</button>`)}
+function bar(t,back,extra=''){return `<header>${back?`<button class="ib" data-act="${back}" aria-label="Voltar">‹</button>`:''}<h1>${h(t)}</h1>${extra}<button class="ib" data-act="theme" aria-label="Alternar tema claro ou escuro">◐</button></header>`}
+function go(v){view=v;render();window.scrollTo(0,0)}
+function render(){const a=$('#app');a.innerHTML=view.n==='home'?homeH():view.n==='cfg'?cfgH():colH();if(view.n==='col')afterCol()}
+
+function homeH(){
+ const l=[...S.cols].sort((a,b)=>b.created-a.created).map(c=>`<div class="card col"><div class="info" data-act="open" data-id="${c.id}" tabindex="0" role="button"><b>${h(c.name)}</b><span class="mut">${fmtD(c.created)}</span><span>${c.items.length} ${c.items.length==1?'item bipado':'itens bipados'}</span></div><div class="side"><button class="pill ${c.open?'ok':'bad'}" data-act="tog" data-id="${c.id}" aria-label="Alternar status da coleta">${c.open?'Aberta':'Fechada'}</button><button class="lnk" data-act="del" data-id="${c.id}">Excluir</button></div></div>`).join('')||'<p class="empty">Nenhuma coleta ainda. Toque em “+ Nova Coleta” para começar.</p>';
+ return bar('Coletor de Dados')+`<main><button class="big" data-act="new">+ Nova Coleta</button>${l}</main>`}
+
+function sample(d){const ex={barcode:'7891234567890',number:'50',text:'LOTE99'};return d.fields.map(f=>f.type==='date'?'31'+f.sep+'12'+f.sep+'2026':ex[f.type]).join(d.sep)}
+function fcfg(f,i,n){const b=(a,t,l,x='')=>`<button class="ib2 ${x}" data-act="${a}" data-i="${i}" aria-label="${l}">${t}</button>`;
+ return `<div class="card"><div class="row"><input data-d="name" data-i="${i}" value="${h(f.name)}" placeholder="Nome do campo" aria-label="Nome do campo ${i+1}">${i?b('up','↑','Subir'):''}${i<n-1?b('dn','↓','Descer'):''}${b('rm','✕','Remover campo','x')}</div><div class="row"><select data-d="type" data-i="${i}" aria-label="Tipo de entrada">${T.map(([v,t])=>`<option value="${v}"${f.type===v?' selected':''}>${t}</option>`).join('')}</select>${f.type==='date'?`<select data-d="dsep" data-i="${i}" aria-label="Formato da data"><option value="."${f.sep==='.'?' selected':''}>DD.MM.AAAA</option><option value="/"${f.sep==='/'?' selected':''}>DD/MM/AAAA</option></select>`:''}</div></div>`}
+function cfgH(){const d=draft;
+ return bar('Configurar coleta','home')+`<main><section class="card"><h2>Separador do arquivo TXT</h2><div class="seg">${[[';','Ponto e vírgula ( ; )'],['|','Pipe ( | )']].map(([v,t])=>`<button class="${d.sep===v?'on':''}" data-act="sep" data-v="${v}">${t}</button>`).join('')}</div></section><h2>Campos da coleta (${d.fields.length})</h2>${d.fields.map((f,i)=>fcfg(f,i,d.fields.length)).join('')}<button class="sec" data-act="addf">+ Adicionar campo</button><section class="card"><span class="mut">Exemplo de linha no TXT</span><code>${h(sample(d))}</code></section><button class="big" data-act="startcfg">Iniciar coleta</button></main>`}
+
+function fieldHTML(f,i,p,val=''){
+ const t=f.type,im=t==='number'?'decimal':t==='date'?'numeric':'text';
+ return `<div class="fld"><label for="${p}${i}">${h(f.name)}</label><div class="row"><input id="${p}${i}" data-p="${p}" data-i="${i}" inputmode="${im}" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${t==='date'?'DD'+f.sep+'MM'+f.sep+'AAAA':''}" value="${h(val)}">${t==='barcode'?`<button class="scanbtn" data-act="scan" data-t="${p}${i}" aria-label="Ler com a câmera">${cam}</button>`:''}</div></div>`}
+function colH(){const c=cur();
+ const pill=`<button class="pill ${c.open?'ok':'bad'}" data-act="tog" data-id="${c.id}" aria-label="Alternar status da coleta">${c.open?'Aberta':'Fechada'}</button>`;
+ return bar(c.name,'home','<button class="hb" data-act="exp">Exportar TXT</button>')+`<main><div class="stat"><span id="cnt"></span>${pill}</div>${c.open?`<section class="card">${c.fields.map((f,i)=>fieldHTML(f,i,'f')).join('')}<button class="big" data-act="add">Salvar Item</button></section>`:'<p class="banner">Coleta fechada: apenas visualização e exportação.</p>'}${c.open&&!c.items.length?'<button class="sec" data-act="cfg">Alterar configuração dos campos</button>':''}<h2>Últimos itens</h2><div id="list" style="display:flex;flex-direction:column;gap:10px"></div></main>`}
+function afterCol(){listR();const c=cur();if(c.open){const f=$('#f0');f&&f.focus({preventScroll:true})}}
+function listR(){const c=cur(),n=c.items.length;$('#cnt').textContent=`${n} ${n==1?'item bipado':'itens bipados'}`;
+ $('#list').innerHTML=n?c.items.slice(-30).reverse().map((it,k)=>`<div class="card it"><span class="no">${n-k}</span><div class="vals">${c.fields.map((f,i)=>`<span><i>${h(f.name)}</i>${h(it.v[i])}</span>`).join('')}</div>${c.open?`<div class="acts"><button class="sec sm" data-act="edit" data-id="${it.id}">Editar</button><button class="sec sm x" data-act="delitem" data-id="${it.id}">Excluir</button></div>`:''}</div>`).join('')+(n>30?`<p class="mut">Mostrando os 30 mais recentes de ${n}.</p>`:''):'<p class="empty">Nenhum item coletado ainda.</p>'}
+
+function clean(v,f,c){v=String(v).replace(/[\r\n]+/g,' ').trim();return f.type==='date'?mask(v,f.sep):v.split(c.sep).join(' ')}
+function check(f,v){
+ if(!v)return `Preencha “${f.name}”.`;
+ if(f.type==='number'&&!/^-?\d+([.,]\d+)?$/.test(v))return `“${f.name}” deve ser um número.`;
+ if(f.type==='date'){const d=v.replace(/\D/g,'');if(d.length!==8||+d.slice(0,2)<1||+d.slice(0,2)>31||+d.slice(2,4)<1||+d.slice(2,4)>12)return `Data inválida em “${f.name}”.`}
+ return ''}
+function readForm(p,c){const v=[];for(let i=0;i<c.fields.length;i++){const e=$('#'+p+i),r=clean(e.value,c.fields[i],c),er=check(c.fields[i],r);if(er){toast(er);e.focus();return null}v.push(r)}return v}
+
+async function scan(t){
+ if(!window.Html5Qrcode){toast('Leitor de câmera indisponível. Digite o código.');return}
+ $('#scan').classList.add('on');
+ try{
+  qr=new Html5Qrcode('reader',{formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.QR_CODE],useBarCodeDetectorIfSupported:true,verbose:false});
+  await qr.start({facingMode:'environment'},{fps:10,qrbox:{width:280,height:160}},async txt=>{
+   const el=$('#'+t);el.value=txt;if(navigator.vibrate)navigator.vibrate(80);await stopScan();
+   const nx=$('#'+t[0]+(+t.slice(1)+1));(nx||el).focus()},()=>{});
+ }catch(e){toast('Não foi possível abrir a câmera. Verifique a permissão.');stopScan()}}
+async function stopScan(){$('#scan').classList.remove('on');if(qr){const q=qr;qr=null;try{await q.stop();q.clear()}catch(e){}}}
+
+async function exportTxt(c){
+ if(!c.items.length){toast('Nenhum item para exportar.');return}
+ const txt=c.items.map(it=>c.fields.map((f,i)=>f.type==='date'?mask(it.v[i],f.sep):it.v[i]).join(c.sep)).join('\r\n')+'\r\n';
+ const nm=(c.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'')||'coleta')+'.txt';
+ try{
+  const cap=window.Capacitor;
+  if(cap&&cap.isNativePlatform&&cap.isNativePlatform()){
+   const P=cap.Plugins,r=await P.Filesystem.writeFile({path:nm,data:txt,directory:'CACHE',encoding:'utf8'});
+   await P.Share.share({title:nm,url:r.uri,dialogTitle:'Exportar TXT'});return}
+  const d=window.claude&&await window.claude.use('downloads');
+  if(d){await d.save({filename:nm,data:txt});toast('Arquivo exportado.');return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));a.download=nm;document.body.appendChild(a);a.click();a.remove();toast('Arquivo exportado.');
+ }catch(e){if(!e||e.code!=='declined')toast('Não foi possível exportar o arquivo.')}}
+
+function startCfg(c){draft={sep:c.sep,fields:c.fields.map(f=>({...f}))};go({n:'cfg',id:c.id})}
+const A={
+ theme(){const r=document.documentElement,dk=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches,n=dk?'light':'dark';r.dataset.theme=n;try{localStorage.setItem('coletor.theme',n)}catch(e){}},
+ home(){go({n:'home'})},
+ new(){openM('<h2>Nova coleta</h2><div class="fld"><label for="nm">Nome da Coleta</label><input id="nm" placeholder="Ex: Recebimento NF 1234" autocomplete="off"></div><button class="big" data-act="create">Continuar</button><button class="sec" data-act="close">Cancelar</button>')},
+ create(){const n=$('#nm').value.trim();if(!n){toast('Digite o nome da coleta.');return}
+  const c={id:uid(),name:n,created:Date.now(),open:true,sep:';',fields:defFields(),items:[]};S.cols.push(c);persist();closeM();startCfg(c)},
+ close:closeM,
+ yes(){const f=askCb;closeM();askCb=null;f&&f()},
+ open(d){go({n:'col',id:d.id})},
+ tog(d){const c=S.cols.find(x=>x.id===d.id);c.open=!c.open;persist();render();toast(c.open?'Coleta aberta.':'Coleta fechada.')},
+ del(d){const c=S.cols.find(x=>x.id===d.id);ask(`Excluir “${c.name}” e seus ${c.items.length} itens?`,'Excluir coleta',()=>{S.cols=S.cols.filter(x=>x.id!==c.id);persist();render()})},
+ cfg(){startCfg(cur())},
+ sep(d){draft.sep=d.v;render()},
+ addf(){draft.fields.push({name:'Campo '+(draft.fields.length+1),type:'text',sep:'.'});render()},
+ up(d){const f=draft.fields,i=+d.i;[f[i-1],f[i]]=[f[i],f[i-1]];render()},
+ dn(d){const f=draft.fields,i=+d.i;[f[i+1],f[i]]=[f[i],f[i+1]];render()},
+ rm(d){if(draft.fields.length<2){toast('Mantenha ao menos um campo.');return}draft.fields.splice(+d.i,1);render()},
+ startcfg(){const bad=draft.fields.findIndex(f=>!f.name.trim());if(bad>-1){toast('Dê um nome a todos os campos.');return}
+  const c=cur();c.sep=draft.sep;c.fields=draft.fields.map(f=>({...f,name:f.name.trim()}));persist();go({n:'col',id:c.id})},
+ scan(d){scan(d.t)},
+ stopscan:stopScan,
+ add(){const c=cur();if(!c.open)return;const v=readForm('f',c);if(!v)return;
+  c.items.push({id:uid(),v});persist();c.fields.forEach((f,i)=>$('#f'+i).value='');listR();$('#f0').focus();toast('Item salvo.')},
+ edit(d){const c=cur(),it=c.items.find(x=>x.id===d.id);editId=d.id;openM(`<h2>Editar item</h2>${c.fields.map((f,i)=>fieldHTML(f,i,'e',it.v[i])).join('')}<button class="big" data-act="saveedit">Salvar alterações</button><button class="sec" data-act="close">Cancelar</button>`)},
+ saveedit(){const c=cur(),it=c.items.find(x=>x.id===editId);if(!it||!c.open)return;const v=readForm('e',c);if(!v)return;it.v=v;persist();closeM();listR();toast('Item atualizado.')},
+ delitem(d){const c=cur();ask('Excluir este item?','Excluir item',()=>{c.items=c.items.filter(x=>x.id!==d.id);persist();listR()})},
+ exp(){exportTxt(cur())}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset)});
+document.addEventListener('input',e=>{const t=e.target,D=t.dataset;
+ if(D.d){const f=draft.fields[D.i];if(D.d==='name'){f.name=t.value;return}if(D.d==='type')f.type=t.value;else f.sep=t.value;render()}
+ else if(D.p){const f=cur().fields[D.i];if(f.type==='date')t.value=mask(t.value,f.sep);else if(f.type==='number')t.value=t.value.replace(/[^\d.,-]/g,'')}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const t=e.target,D=t.dataset;
+ if(D.p){e.preventDefault();const i=+D.i,n=cur().fields.length;if(i<n-1)$('#'+D.p+(i+1)).focus();else D.p==='f'?A.add():A.saveedit()}
+ else if(t.id==='nm'){e.preventDefault();A.create()}
+ else if(t.getAttribute('role')==='button')t.click()});
+render();
+</script>
+</body>
+</html>
