@@ -1,0 +1,15 @@
+COMO GERAR O APK (sem instalar nada no PC)
+
+1. Crie uma conta gratuita em github.com e um repositório novo (pode ser privado).
+2. Envie TODOS os arquivos desta pasta para o repositório, na branch "main"
+   (inclua a pasta oculta .github). Em "Add file > Upload files" dá para arrastar tudo.
+3. Abra a aba "Actions". O fluxo "Gerar APK" roda sozinho (leva ~5 a 8 minutos).
+   Se não rodar, clique em "Gerar APK" > "Run workflow".
+4. Ao terminar, abra a execução e baixe "coletor-de-dados-apk" (zip com app-debug.apk).
+5. Passe o APK para o celular e instale (permita "instalar apps desconhecidos").
+
+Alternativa com Android Studio: npm install, npx cap add android, adicione a permissão
+CAMERA no AndroidManifest.xml, npx cap sync, e compile (Build > Build APK).
+
+O app funciona 100% offline: a biblioteca de leitura de código fica dentro do APK.
+Ao exportar, o Android abre a tela de compartilhar para salvar o .txt (Arquivos, Drive, WhatsApp, e-mail).
